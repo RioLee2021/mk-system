@@ -1,11 +1,13 @@
 package net.system.mk.commons.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import net.system.mk.commons.ctx.IBaseContext;
+import net.system.mk.commons.enums.CtxScope;
 import net.system.mk.commons.enums.RoleType;
 
 /**
@@ -15,7 +17,8 @@ import net.system.mk.commons.enums.RoleType;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @Accessors(chain = true)
-public class PermUser extends BasePO {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PermUser extends BasePO implements IBaseContext {
     /**
     * 商户ID
     */
@@ -51,4 +54,54 @@ public class PermUser extends BasePO {
     */
     @ApiModelProperty(value="otp验证码")
     private String otpCode;
+
+    @Override
+    public Integer id() {
+        return this.getId();
+    }
+
+    @Override
+    public String name() {
+        return this.roleType.getChName();
+    }
+
+    @Override
+    public String account() {
+        return this.account;
+    }
+
+    @Override
+    public String token() {
+        return this.token;
+    }
+
+    @Override
+    public boolean isRoot() {
+        return this.getRoleType().ordinal()<=RoleType.WebMaster.ordinal();
+    }
+
+    @Override
+    public String otp() {
+        return this.otpCode;
+    }
+
+    @Override
+    public Integer merchantId() {
+        return this.merchantId;
+    }
+
+    @Override
+    public boolean isBanned() {
+        return this.getDisabled()!=null&&this.getDisabled();
+    }
+
+    @Override
+    public RoleType role() {
+        return this.roleType;
+    }
+
+    @Override
+    public CtxScope scope() {
+        return CtxScope.backend;
+    }
 }

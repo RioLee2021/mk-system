@@ -1,0 +1,42 @@
+app:
+  system-version: '@backend.version@'
+  name: ${spring.application.name}
+  zone-offset: 8
+  qps: 400
+  i18n: true
+  test-mode: false
+  tg-bot-token: 8147185823:AAEuFGdlMVhr-9qYJ_2yPS0Lm1J6WULDzjQ
+spring:
+  profiles:
+    active: test
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+  jackson:
+    time-zone: GMT+8
+  application:
+    name: system-mk-backend
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: false
+    encoding: utf-8
+server:
+  port: 9060
+  compression:
+    enabled: true
+    mime-types:
+      - application/json
+
+
+mybatis-plus:
+  type-enums-package: net.system.mk.commons.enums
+  configuration:
+    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    map-underscore-to-camel-case: true
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations:
+    - mappers/*.xml
+
+
+

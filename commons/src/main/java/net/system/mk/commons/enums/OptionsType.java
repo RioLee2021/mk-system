@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.system.mk.commons.interfaces.IDictItemAbel;
+import net.system.mk.commons.meta.DictItem;
+import net.system.mk.commons.pojo.MerchantConfig;
 
 /**
  * @author USER
@@ -12,7 +14,7 @@ import net.system.mk.commons.interfaces.IDictItemAbel;
 @Getter
 @AllArgsConstructor
 public enum OptionsType implements IDbEnums {
-
+    merchant_config("商户下拉", MerchantConfig.class, true),
     ;
 
     private final String chName;
