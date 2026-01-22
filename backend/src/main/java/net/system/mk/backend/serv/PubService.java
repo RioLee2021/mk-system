@@ -10,17 +10,16 @@ import net.system.mk.backend.ctrl.vo.PermUserLoginRequest;
 import net.system.mk.commons.conf.OptionsTableNameHandler;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
-import net.system.mk.commons.dao.DynamicOptionsMapper;
-import net.system.mk.commons.dao.PermMenuMapper;
-import net.system.mk.commons.dao.PermUserLoginLogMapper;
-import net.system.mk.commons.dao.PermUserMapper;
+import net.system.mk.commons.dao.*;
 import net.system.mk.commons.enums.*;
 import net.system.mk.commons.expr.GlobalException;
 import net.system.mk.commons.ip2region.IpSearcher;
 import net.system.mk.commons.meta.*;
+import net.system.mk.commons.pojo.MerchantConfig;
 import net.system.mk.commons.pojo.PermMenu;
 import net.system.mk.commons.pojo.PermUser;
 import net.system.mk.commons.pojo.PermUserLoginLog;
+import net.system.mk.commons.utils.OtherUtils;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -56,16 +55,23 @@ public class PubService {
     private String pkg;
     @Resource
     private DynamicOptionsMapper dynamicOptionsMapper;
+    @Resource
+    private MerchantConfigMapper merchantConfigMapper;
 
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<PermUser> login(PermUserLoginRequest request) {
+        RequestBaseData rbd = RequestBaseData.getInstance();
         PermUser usr = permUserMapper.getByAccountAndPassword(request.getAccount(), request.getPassword());
         if (usr == null) {
             throw new GlobalException(BUSINESS_ERROR, "用户名或密码错误");
         }
         if (usr.isBanned()) {
             throw new GlobalException(BUSINESS_ERROR, "用户被禁用");
+        }
+        MerchantConfig mch = merchantConfigMapper.selectById(usr.getMerchantId());
+        if (mch != null && !OtherUtils.isPermitted(rbd.getIp(), mch.getApiWhiteList())) {
+            throw new GlobalException(BUSINESS_ERROR, "IP被限制");
         }
         //判断是否有旧的TOKEN
         if (StrUtil.isNotBlank(usr.getToken())) {
@@ -74,7 +80,6 @@ public class PubService {
         String token = "b#" + IdUtil.fastSimpleUUID();
         usr.setToken(token);
         permUserMapper.updateById(usr);
-        RequestBaseData rbd = RequestBaseData.getInstance();
         PermUserLoginLog log = new PermUserLoginLog();
         log.setPermUserId(usr.id()).setFromIp(rbd.getIp()).setFromRegion(ipSearcher.search(rbd.getIp()));
         //拿500字符长度UA
@@ -109,17 +114,17 @@ public class PubService {
     public List<PermMenuTree> menus() {
         IBaseContext ctx = ctxHelper.getBackendCtx();
         List<PermMenu> menus = permMenuMapper.getMenuByRoleType(ctx.role());
-        if (ctx.role()== RoleType.SuperAdmin){
+        if (ctx.role() == RoleType.SuperAdmin) {
             menus = permMenuMapper.getMenusBySuperAdmin();
         }
-        if (ctx.role()==RoleType.WebMaster){
-            menus  = permMenuMapper.getMenusByWebMaster();
+        if (ctx.role() == RoleType.WebMaster) {
+            menus = permMenuMapper.getMenusByWebMaster();
         }
-        Map<PermMenuGroup,  List<PermMenu>> menuMap = menus.stream().collect(Collectors.groupingBy(PermMenu::getPermMenuGroup));
+        Map<PermMenuGroup, List<PermMenu>> menuMap = menus.stream().collect(Collectors.groupingBy(PermMenu::getPermMenuGroup));
         //根据权限范围划分
         List<PermMenuTree> rs = Lists.newArrayList();
-        MenuScope currentScope = ctx.merchantId()==0?MenuScope.platform:MenuScope.merchant;
-        for (Map.Entry<PermMenuGroup, List<PermMenu>> entry:  menuMap.entrySet()){
+        MenuScope currentScope = ctx.merchantId() == 0 ? MenuScope.platform : MenuScope.merchant;
+        for (Map.Entry<PermMenuGroup, List<PermMenu>> entry : menuMap.entrySet()) {
             //菜单组
             PermMenuTree group = new PermMenuTree();
             group.setMenuName(entry.getKey().getChName())
@@ -127,8 +132,8 @@ public class PubService {
                     .setIcon(entry.getKey().getIcon())
                     .setSortNo(entry.getKey().getSortNo())
                     .setSelected(Boolean.TRUE);
-            for (PermMenu menu:entry.getValue()){
-                if (menu.getMenuScope()==MenuScope.both||menu.getMenuScope()==currentScope){
+            for (PermMenu menu : entry.getValue()) {
+                if (menu.getMenuScope() == MenuScope.both || menu.getMenuScope() == currentScope) {
                     PermMenuTree item = new PermMenuTree();
                     item.setMenuName(menu.getMenuName())
                             .setMenuPath(menu.getMenuPath())
@@ -138,7 +143,7 @@ public class PubService {
                     group.getChildren().add(item);
                 }
             }
-            if (group.getChildren().size()>0){
+            if (group.getChildren().size() > 0) {
                 group.getChildren().sort(Comparator.comparingInt(PermMenuTree::getSortNo));
                 rs.add(group);
             }
@@ -179,20 +184,20 @@ public class PubService {
         try {
             OptionsTableNameHandler.setTableName(ot);
             List<JSONObject> data;
-            if (ot.isMerchantInject()){
+            if (ot.isMerchantInject()) {
                 IBaseContext ctx = ctxHelper.getBackendCtx();
-                if (ot==OptionsType.merchant_config){
+                if (ot == OptionsType.merchant_config) {
                     data = dynamicOptionsMapper.selectOptions();
-                    if (ctx.merchantId()!=0){
-                        data = data.stream().filter(x->x.getIntValue("id")==ctx.merchantId()).collect(Collectors.toList());
+                    if (ctx.merchantId() != 0) {
+                        data = data.stream().filter(x -> x.getIntValue("id") == ctx.merchantId()).collect(Collectors.toList());
                     }
-                }else {
+                } else {
                     data = dynamicOptionsMapper.selectMerchantOptions(ctx.merchantId());
                 }
-            }else {
+            } else {
                 data = dynamicOptionsMapper.selectOptions();
             }
-            if (data != null&&data.size()>0){
+            if (data != null && data.size() > 0) {
                 List<DictItem> rs = data.stream().map(x -> Convert.convert(ot.getDictItemClass(), x).toDictItem()).collect(Collectors.toList());
                 return rs.stream().filter(Objects::nonNull).collect(Collectors.toList());
             }

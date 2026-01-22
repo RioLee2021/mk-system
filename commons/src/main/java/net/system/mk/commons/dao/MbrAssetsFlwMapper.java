@@ -1,0 +1,21 @@
+package net.system.mk.commons.dao;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import net.system.mk.commons.pojo.MbrAssetsFlw;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+
+/**
+ * @author USER
+ * @date 2026-01-2026/1/22/0022 12:27
+ */
+@Mapper
+public interface MbrAssetsFlwMapper extends BaseMapper<MbrAssetsFlw> {
+
+    @Select("select maf.* from mbr_assets_flw maf inner join mbr_info mb on maf.mbr_id = mb.id ${ew.customSqlSegment}")
+    IPage<MbrAssetsFlw> getPageByEw(@Param("page") IPage<MbrAssetsFlw> page, @Param("ew") QueryWrapper<Object> ew);
+}
