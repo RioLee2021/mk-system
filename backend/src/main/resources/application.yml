@@ -30,6 +30,11 @@ server:
 
 
 mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: disabled
+      logic-delete-value: 1
+      logic-not-delete-value: 0
   type-enums-package: net.system.mk.commons.enums
   configuration:
     default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler

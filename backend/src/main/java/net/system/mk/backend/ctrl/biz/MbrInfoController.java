@@ -77,4 +77,6 @@ public class MbrInfoController {
     public ResultBody<Void> updCpMark(@Valid @RequestBody MbrCpMarkUpdRequest request) {
         return service.updCpMark(request);
     }
+
+    //todo 批量新增虚拟号
 }

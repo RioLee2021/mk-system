@@ -185,4 +185,133 @@ create table `notice_record`
   COLLATE = utf8mb4_bin
   ROW_FORMAT = DYNAMIC comment '公告管理';
 
+-- ----------------------------
+-- Table structure for 品牌信息
+-- ----------------------------
+drop table if exists `brand_info`;
+create table `brand_info`
+(
+    id             int(11)      not null auto_increment,
+    create_at      timestamp    null comment '创建时间',
+    update_at      timestamp    null comment '最后更新时间',
+    create_by      varchar(100) not null comment '创建自',
+    disabled       boolean      not null default false comment '删除标识',
+    brand_name     varchar(100) not null comment '品牌名称',
+    brand_logo_url varchar(300) not null comment '品牌logo图片地址',
+    brand_sort     int(3)       not null comment '排序字段',
+    primary key (id) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '品牌信息';
+
+-- ----------------------------
+-- Table structure for 产品信息
+-- ----------------------------
+drop table if exists `product_info`;
+create table `product_info`
+(
+    id              int(11)        not null auto_increment,
+    create_at       timestamp      null comment '创建时间',
+    update_at       timestamp      null comment '最后更新时间',
+    create_by       varchar(100)   not null comment '创建自',
+    disabled        boolean        not null default false comment '删除标识',
+    brand_id        int(11)        not null comment '品牌ID',
+    product_name    varchar(300)   not null comment '产品名称',
+    pic_1_url       varchar(300)   not null comment '图片1地址',
+    pic_2_url       varchar(300)   null comment '图片2地址',
+    pic_3_url       varchar(300)   null comment '图片3地址',
+    label_price     decimal(20, 2) not null default 0 comment '标签价格',
+    order_price     decimal(20, 2) not null default 0 comment '拼单价格',
+    primary key (id) using btree,
+    index idx_brand_id (brand_id) using btree,
+    index idx_product_name (product_name) using btree,
+    index idx_label_price (label_price) using btree,
+    index idx_order_price (order_price) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '产品信息';
+
+-- ----------------------------
+-- Table structure for 订单列表
+-- ----------------------------
+drop table if exists `order_record`;
+create table `order_record`
+(
+    id              int(11)        not null auto_increment,
+    create_at       timestamp      null comment '创建时间',
+    update_at       timestamp      null comment '最后更新时间',
+    create_by       varchar(100)   not null comment '创建自',
+    disabled        boolean        not null default false comment '删除标识',
+    order_no        varchar(100)   not null comment '订单编号',
+    owner_id        int(11)        not null default 0 comment '发起用户ID',
+    product_id      int(11)        not null default 0 comment '产品ID',
+    order_desc      text           null comment '订单描述',
+    base_commission decimal(20, 2) not null default 0 comment '基础佣金',
+    order_price     decimal(20, 2) not null default 0 comment '拼单价格',
+    order_status    int(4)         not null default 0 comment '订单状态(OrderStatus)',
+    special_offer   boolean        not null default false comment '优惠标识',
+    primary key (id) using btree,
+    unique key uk_order_no (order_no) using btree,
+    index idx_owner_id (owner_id) using btree,
+    index idx_product_id (product_id) using btree,
+    index idx_order_price (order_price) using btree,
+    index idx_base_commission (base_commission) using btree,
+    index idx_order_status (order_status) using btree,
+    index idx_special_offer (special_offer) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '订单列表';
+
+-- ----------------------------
+-- Table structure for 拼单参与记录
+-- ----------------------------
+drop table if exists `order_pd_record`;
+create table `order_pd_record`
+(
+    id          int(11)        not null auto_increment,
+    create_at   timestamp      null comment '创建时间',
+    update_at   timestamp      null comment '最后更新时间',
+    create_by   varchar(100)   not null comment '创建自',
+    disabled    boolean        not null default false comment '删除标识',
+    order_no    varchar(100)   not null comment '订单编号',
+    pd_no       varchar(100)   not null comment '拼单编号',
+    mbr_id      int(11)        not null comment '会员ID',
+    order_price decimal(20, 2) not null comment '拼单价格',
+    commission  decimal(20, 2) not null comment '佣金',
+    pd_status   int(4)         not null comment '拼单状态(OrderPdStatus)',
+    primary key (id) using btree,
+    index idx_order_no (order_no) using btree,
+    index idx_pd_no (pd_no) using btree,
+    index idx_mbr_id (mbr_id) using btree,
+    index idx_order_price (order_price) using btree,
+    index idx_commission (commission) using btree,
+    index idx_pd_status (pd_status) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '拼单参与记录';
+
+-- ----------------------------
+-- Table structure for 用户拼单申请
+-- ----------------------------
+drop table if exists `mbr_pd_request`;
+create table `mbr_pd_request`
+(
+    id        int(11)      not null auto_increment,
+    create_at timestamp    null comment '创建时间',
+    update_at timestamp    null comment '最后更新时间',
+    create_by varchar(100) not null comment '创建自',
+    disabled  boolean      not null default false comment '删除标识',
+    mbr_id    int(11)      not null comment '会员ID',
+    order_no  varchar(100) null comment '订单编号',
+    primary key (id) using btree,
+    index idx_mbr_id (mbr_id) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '用户拼单申请';
+
 set foreign_key_checks = 1;
