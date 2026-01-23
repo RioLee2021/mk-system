@@ -11,49 +11,68 @@ import lombok.experimental.Accessors;
 /**
  * 产品信息
  */
-@ApiModel(description="产品信息")
+@ApiModel(description = "产品信息")
 @Data
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
 public class ProductInfo extends BasePO {
-
     /**
-    * 品牌ID
-    */
-    @ApiModelProperty(value="品牌ID")
+     * 品牌ID
+     */
+    @ApiModelProperty(value = "品牌ID")
     private Integer brandId;
 
     /**
-    * 产品名称
-    */
-    @ApiModelProperty(value="产品名称")
+     * 产品名称
+     */
+    @ApiModelProperty(value = "产品名称")
     private String productName;
 
     /**
-    * 图片1地址
-    */
-    @ApiModelProperty(value="图片1地址")
+     * 图片1地址
+     */
+    @ApiModelProperty(value = "图片1地址")
     private String pic1Url;
 
     /**
-    * 图片2地址
-    */
-    @ApiModelProperty(value="图片2地址")
+     * 图片2地址
+     */
+    @ApiModelProperty(value = "图片2地址")
     private String pic2Url;
 
     /**
-    * 图片3地址
-    */
-    @ApiModelProperty(value="图片3地址")
+     * 图片3地址
+     */
+    @ApiModelProperty(value = "图片3地址")
     private String pic3Url;
 
     /**
-    * 标签价格
-    */
-    @ApiModelProperty(value="标签价格")
+     * 标签价格
+     */
+    @ApiModelProperty(value = "标签价格")
     private BigDecimal labelPrice;
 
-    @ApiModelProperty(value="拼单价格")
+    /**
+     * 拼单价格
+     */
+    @ApiModelProperty(value = "拼单价格")
     private BigDecimal orderPrice;
 
+    /**
+     * 佣金金额
+     */
+    @ApiModelProperty(value = "佣金金额")
+    private BigDecimal commission;
+
+    /**
+     * 产品描述
+     */
+    @ApiModelProperty(value = "产品描述")
+    private String productDesc;
+
+    /**
+     * 优惠标识
+     */
+    @ApiModelProperty(value = "优惠标识")
+    private Boolean specialOffer;
 }

@@ -2,6 +2,7 @@ package net.system.mk.backend.ctrl.basic;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.system.mk.backend.ctrl.basic.vo.OrderRecordDetailRequest;
 import net.system.mk.backend.ctrl.basic.vo.OrderRecordPagerRequest;
 import net.system.mk.backend.serv.OrderRecordService;
 import net.system.mk.commons.anno.AuthCheck;
@@ -9,8 +10,10 @@ import net.system.mk.commons.anno.menu.MerchantOnly;
 import net.system.mk.commons.anno.menu.PermMenuScan;
 import net.system.mk.commons.enums.MenuScope;
 import net.system.mk.commons.enums.PermMenuGroup;
+import net.system.mk.commons.ext.OrderRecordDetailResponse;
+import net.system.mk.commons.ext.OrderRecordResponse;
 import net.system.mk.commons.meta.PagerResult;
-import net.system.mk.commons.pojo.OrderRecord;
+import net.system.mk.commons.meta.ResultBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +28,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/order")
-@Api(tags = "订单管理")
+@Api(tags = "拼单记录")
 @PermMenuScan(group = PermMenuGroup.basic_setting, scope = MenuScope.merchant)
 public class OrderRecordController {
 
@@ -36,11 +39,16 @@ public class OrderRecordController {
     @PostMapping("/list.do")
     @AuthCheck
     @MerchantOnly
-    public PagerResult<OrderRecord> list(@Valid @RequestBody OrderRecordPagerRequest request) {
+    public PagerResult<OrderRecordResponse> list(@Valid @RequestBody OrderRecordPagerRequest request) {
         return service.list(request);
     }
 
-    //todo 批量新增订单
-
+    @PostMapping("/detail.do")
+    @ApiOperation(value = "拼单详情")
+    @AuthCheck
+    @MerchantOnly
+    public ResultBody<OrderRecordDetailResponse> detail(@Valid @RequestBody OrderRecordDetailRequest request) {
+        return service.detail(request);
+    }
 
 }

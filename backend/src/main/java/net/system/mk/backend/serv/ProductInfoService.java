@@ -2,16 +2,20 @@ package net.system.mk.backend.serv;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
+import net.system.mk.backend.ctrl.basic.vo.BatOrderRecordAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
+import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
+import net.system.mk.commons.dao.OrderRecordMapper;
 import net.system.mk.commons.dao.ProductInfoMapper;
-import net.system.mk.commons.expr.GlobalErrorCode;
+import net.system.mk.commons.enums.OrderStatus;
 import net.system.mk.commons.expr.GlobalException;
 import net.system.mk.commons.ext.ProductInfoExcel;
 import net.system.mk.commons.ext.listener.ProductInfoListener;
 import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
+import net.system.mk.commons.pojo.OrderRecord;
 import net.system.mk.commons.pojo.ProductInfo;
 import net.system.mk.commons.utils.OtherUtils;
 import org.springframework.stereotype.Service;
@@ -21,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -46,7 +50,7 @@ public class ProductInfoService {
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<Void> add(ProductInfoAddRequest request) {
         ProductInfo data = new ProductInfo();
-        BeanUtil.copyProperties(request,data);
+        BeanUtil.copyProperties(request, data);
         productInfoMapper.insert(data);
         return ResultBody.success();
     }
@@ -54,7 +58,7 @@ public class ProductInfoService {
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<Void> delete(BaseUpdateRequest request) {
         ProductInfo data = productInfoMapper.selectById(request.getId());
-        if (data == null){
+        if (data == null) {
             throw new GlobalException(BUSINESS_ERROR, "数据不存在");
         }
         data.setDisabled(Boolean.TRUE);
@@ -67,7 +71,7 @@ public class ProductInfoService {
         try {
             ProductInfoListener listener = new ProductInfoListener();
             EasyExcel.read(file.getInputStream(), ProductInfo.class, listener).sheet().doRead();
-            for (ProductInfoExcel data : listener.getCacheDataList()){
+            for (ProductInfoExcel data : listener.getCacheDataList()) {
                 ProductInfo po = data.toProductInfo();
                 po.setBrandId(brandId);
                 productInfoMapper.insert(po);
@@ -92,5 +96,18 @@ public class ProductInfoService {
         } catch (IOException e) {
             throw new GlobalException(BUSINESS_ERROR, "模板下载失败");
         }
+    }
+
+
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public ResultBody<Void> batUpdSpecialOffer(BatchIdsRequest request) {
+        for (Integer id : request.getIds()){
+            ProductInfo po = productInfoMapper.selectById(id);
+            if (po!=null){
+                po.setSpecialOffer(!po.getSpecialOffer());
+                productInfoMapper.updateById(po);
+            }
+        }
+        return ResultBody.success();
     }
 }

@@ -22,7 +22,4 @@ public class OrderRecordPagerRequest extends TimeRangePageRequest {
     @QueryCon
     private Integer productId;
 
-    @ApiModelProperty(value = "是否特价")
-    @QueryCon
-    private Boolean specialOffer;
 }

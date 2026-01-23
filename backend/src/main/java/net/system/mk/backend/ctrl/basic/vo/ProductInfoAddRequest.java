@@ -60,4 +60,15 @@ public class ProductInfoAddRequest {
     @ApiModelProperty(value="拼单价格",required = true)
     @NotNull(message = "拼单价格不能为空")
     private BigDecimal orderPrice;
+
+    @ApiModelProperty(value="佣金",required = true)
+    @NotNull(message = "佣金不能为空")
+    private BigDecimal commission;
+
+    @ApiModelProperty(value="产品描述")
+    private String productDesc;
+
+    @ApiModelProperty(value="是否特价",required = true)
+    @NotNull(message = "是否特价不能为空")
+    private Boolean specialOffer;
 }

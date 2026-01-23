@@ -2,8 +2,10 @@ package net.system.mk.backend.ctrl.basic;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.system.mk.backend.ctrl.basic.vo.BatOrderRecordAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
+import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
 import net.system.mk.backend.serv.ProductInfoService;
 import net.system.mk.commons.anno.AuthCheck;
 import net.system.mk.commons.anno.menu.MerchantOnly;
@@ -48,6 +50,14 @@ public class ProductInfoController {
     @MerchantOnly
     public ResultBody<Void> add(@Valid @RequestBody ProductInfoAddRequest request) {
         return service.add(request);
+    }
+
+    @PostMapping("/batUpdSpecialOffer.do")
+    @ApiOperation(value = "批量设置特价标识")
+    @AuthCheck
+    @MerchantOnly
+    public ResultBody<Void> batUpdSpecialOffer(@Valid @RequestBody BatchIdsRequest request) {
+        return service.batUpdSpecialOffer(request);
     }
 
     @PostMapping("/delete.do")

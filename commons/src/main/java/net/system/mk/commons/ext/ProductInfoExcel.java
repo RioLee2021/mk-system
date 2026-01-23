@@ -33,11 +33,18 @@ public class ProductInfoExcel {
     @ExcelProperty(value = "拼价格",index = 5)
     private String orderPrice;
 
+    @ExcelProperty(value = "佣金",index = 6)
+    private String commission;
+
+    @ExcelProperty(value = "产品描述",index = 7)
+    private String productDesc;
+
     public ProductInfo toProductInfo(){
         ProductInfo productInfo = new ProductInfo();
         productInfo.setProductName(productName)
                 .setPic1Url(pic1Url).setPic2Url(pic2Url).setPic3Url(pic3Url)
-                .setLabelPrice(new BigDecimal(labelPrice)).setOrderPrice(new BigDecimal(orderPrice));
+                .setLabelPrice(new BigDecimal(labelPrice)).setOrderPrice(new BigDecimal(orderPrice))
+                .setCommission(new BigDecimal(commission)).setProductDesc(productDesc);
         return productInfo;
     }
 }
