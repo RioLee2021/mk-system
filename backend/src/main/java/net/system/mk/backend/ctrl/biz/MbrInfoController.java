@@ -78,5 +78,4 @@ public class MbrInfoController {
         return service.updCpMark(request);
     }
 
-    //todo 批量新增虚拟号
 }

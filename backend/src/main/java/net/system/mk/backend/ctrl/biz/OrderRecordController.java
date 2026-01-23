@@ -1,9 +1,9 @@
-package net.system.mk.backend.ctrl.basic;
+package net.system.mk.backend.ctrl.biz;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.system.mk.backend.ctrl.basic.vo.OrderRecordDetailRequest;
-import net.system.mk.backend.ctrl.basic.vo.OrderRecordPagerRequest;
+import net.system.mk.backend.ctrl.biz.vo.OrderRecordDetailRequest;
+import net.system.mk.backend.ctrl.biz.vo.OrderRecordPagerRequest;
 import net.system.mk.backend.serv.OrderRecordService;
 import net.system.mk.commons.anno.AuthCheck;
 import net.system.mk.commons.anno.menu.MerchantOnly;
@@ -29,7 +29,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/order")
 @Api(tags = "拼单记录")
-@PermMenuScan(group = PermMenuGroup.basic_setting, scope = MenuScope.merchant)
+@PermMenuScan(group = PermMenuGroup.biz_manage, scope = MenuScope.merchant)
 public class OrderRecordController {
 
     @Resource

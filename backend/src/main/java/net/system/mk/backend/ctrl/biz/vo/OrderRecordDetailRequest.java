@@ -1,4 +1,4 @@
-package net.system.mk.backend.ctrl.basic.vo;
+package net.system.mk.backend.ctrl.biz.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
