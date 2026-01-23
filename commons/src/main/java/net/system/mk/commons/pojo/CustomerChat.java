@@ -31,5 +31,5 @@ public class CustomerChat extends BasePO {
     * 回复标识
     */
     @ApiModelProperty(value="回复标识")
-    private Boolean replayFlg;
+    private Boolean replyFlg;
 }

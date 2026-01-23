@@ -322,12 +322,12 @@ create table `customer_chat`
     disabled    boolean      not null default false comment '删除标识',
     mbr_id      int(11)      not null comment '会员ID',
     customer_id int(11)      not null comment '客服ID',
-    replay_flg  boolean      not null default false comment '回复标识',
+    reply_flg  boolean      not null default false comment '回复标识',
     primary key (id) using btree,
     unique key uk_mbr_id (mbr_id, customer_id) using btree,
     index idx_mbr_id (mbr_id) using btree,
     index idx_customer_id (customer_id) using btree,
-    index idx_replay_flg (replay_flg) using btree
+    index idx_replay_flg (reply_flg) using btree
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_bin
@@ -339,15 +339,19 @@ create table `customer_chat`
 drop table if exists `chat_msg_log`;
 create table `chat_msg_log`
 (
-    id        int(11)      not null auto_increment,
-    create_at timestamp    null comment '创建时间',
-    disabled  boolean      not null default false comment '删除标识',
-    chat_id   int(11)      not null comment '聊天ID',
-    owner_id  int(11)      not null comment '用户ID',
-    content   text         not null comment '内容',
+    id           int(11)   not null auto_increment,
+    create_at    timestamp null comment '创建时间',
+    disabled     boolean   not null default false comment '删除标识',
+    chat_id      int(11)   not null comment '聊天ID',
+    owner_id     int(11)   not null comment '用户ID',
+    content      text      not null comment '内容',
+    customer_flg boolean   not null default false comment '客服标识',
+    image_flg    boolean   not null default false comment '图片标识',
     primary key (id) using btree,
     index idx_chat_id (chat_id) using btree,
-    index idx_owner_id (owner_id) using btree
+    index idx_owner_id (owner_id) using btree,
+    index idx_customer_flg (customer_flg) using btree,
+    index idx_image_flg (image_flg) using btree
 ) ENGINE = InnoDB
   CHARACTER SET = utf8mb4
   COLLATE = utf8mb4_bin
