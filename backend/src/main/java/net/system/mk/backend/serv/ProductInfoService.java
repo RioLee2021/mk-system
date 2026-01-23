@@ -2,20 +2,16 @@ package net.system.mk.backend.serv;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
-import net.system.mk.backend.ctrl.basic.vo.BatOrderRecordAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
 import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
-import net.system.mk.commons.dao.OrderRecordMapper;
 import net.system.mk.commons.dao.ProductInfoMapper;
-import net.system.mk.commons.enums.OrderStatus;
 import net.system.mk.commons.expr.GlobalException;
 import net.system.mk.commons.ext.ProductInfoExcel;
 import net.system.mk.commons.ext.listener.ProductInfoListener;
 import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
-import net.system.mk.commons.pojo.OrderRecord;
 import net.system.mk.commons.pojo.ProductInfo;
 import net.system.mk.commons.utils.OtherUtils;
 import org.springframework.stereotype.Service;
@@ -26,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 

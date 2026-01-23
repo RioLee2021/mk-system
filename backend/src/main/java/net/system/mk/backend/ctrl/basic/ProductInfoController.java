@@ -2,7 +2,6 @@ package net.system.mk.backend.ctrl.basic;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.system.mk.backend.ctrl.basic.vo.BatOrderRecordAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
 import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
