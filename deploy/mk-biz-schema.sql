@@ -309,4 +309,48 @@ create table `mbr_pd_request`
   COLLATE = utf8mb4_bin
   ROW_FORMAT = DYNAMIC comment '用户拼单申请';
 
+-- ----------------------------
+-- Table structure for 客服聊天
+-- ----------------------------
+drop table if exists `customer_chat`;
+create table `customer_chat`
+(
+    id          int(11)      not null auto_increment,
+    create_at   timestamp    null comment '创建时间',
+    update_at   timestamp    null comment '最后更新时间',
+    create_by   varchar(100) not null comment '创建自',
+    disabled    boolean      not null default false comment '删除标识',
+    mbr_id      int(11)      not null comment '会员ID',
+    customer_id int(11)      not null comment '客服ID',
+    replay_flg  boolean      not null default false comment '回复标识',
+    primary key (id) using btree,
+    unique key uk_mbr_id (mbr_id, customer_id) using btree,
+    index idx_mbr_id (mbr_id) using btree,
+    index idx_customer_id (customer_id) using btree,
+    index idx_replay_flg (replay_flg) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '客服聊天日志';
+
+-- ----------------------------
+-- Table structure for 聊天日志
+-- ----------------------------
+drop table if exists `chat_msg_log`;
+create table `chat_msg_log`
+(
+    id        int(11)      not null auto_increment,
+    create_at timestamp    null comment '创建时间',
+    disabled  boolean      not null default false comment '删除标识',
+    chat_id   int(11)      not null comment '聊天ID',
+    owner_id  int(11)      not null comment '用户ID',
+    content   text         not null comment '内容',
+    primary key (id) using btree,
+    index idx_chat_id (chat_id) using btree,
+    index idx_owner_id (owner_id) using btree
+) ENGINE = InnoDB
+  CHARACTER SET = utf8mb4
+  COLLATE = utf8mb4_bin
+  ROW_FORMAT = DYNAMIC comment '聊天日志';
+
 set foreign_key_checks = 1;

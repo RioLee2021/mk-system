@@ -5,6 +5,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import net.system.mk.backend.ctrl.vo.CurrentTaskCnt;
 import net.system.mk.backend.ctrl.vo.PermMenuTree;
 import net.system.mk.backend.ctrl.vo.PermUserLoginRequest;
 import net.system.mk.commons.conf.OptionsTableNameHandler;
@@ -57,6 +58,12 @@ public class PubService {
     private DynamicOptionsMapper dynamicOptionsMapper;
     @Resource
     private MerchantConfigMapper merchantConfigMapper;
+    @Resource
+    private CustomerChatMapper customerChatMapper;
+    @Resource
+    private MbrWithdrawRecordMapper mbrWithdrawRecordMapper;
+    @Resource
+    private MbrPdRequestMapper mbrPdRequestMapper;
 
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
@@ -205,5 +212,14 @@ public class PubService {
         } finally {
             OptionsTableNameHandler.remove();
         }
+    }
+
+    public ResultBody<CurrentTaskCnt> currentTaskCnt() {
+        IBaseContext ctx = ctxHelper.getBackendCtx();
+        CurrentTaskCnt rs = new CurrentTaskCnt();
+        rs.setChatCnt(customerChatMapper.unReplyCntByCustomerId(ctx.id()));
+        rs.setWithdrawCnt(mbrWithdrawRecordMapper.unProcessedCnt());
+        rs.setPdReqCnt(mbrPdRequestMapper.getRunningCnt());
+        return ResultBody.okData(rs);
     }
 }

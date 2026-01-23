@@ -2,6 +2,7 @@ package net.system.mk.backend.ctrl;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.system.mk.backend.ctrl.vo.CurrentTaskCnt;
 import net.system.mk.backend.ctrl.vo.PermMenuTree;
 import net.system.mk.backend.ctrl.vo.PermUserLoginRequest;
 import net.system.mk.backend.serv.PubService;
@@ -34,7 +35,12 @@ public class PubController {
     @Resource
     private PubService service;
 
-
+    @PostMapping("/currentTaskCnt.do")
+    @ApiOperation(value = "当前消息数量")
+    @AuthCheck
+    public ResultBody<CurrentTaskCnt> currentTaskCnt() {
+        return service.currentTaskCnt();
+    }
 
     @PostMapping("/login.do")
     @ApiOperation(value = "后台账号登录")
