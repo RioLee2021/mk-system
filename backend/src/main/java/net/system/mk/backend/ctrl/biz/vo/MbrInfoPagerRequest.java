@@ -25,7 +25,7 @@ public class MbrInfoPagerRequest extends PagerRequest {
 
 
     @ApiModelProperty(value = "手机号/邀请码/账号/用户ID")
-    private Object cond;
+    private String cond;
 
     @ApiModelProperty(value = "IP")
     private String ip;
