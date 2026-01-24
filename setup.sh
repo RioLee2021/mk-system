@@ -10,6 +10,6 @@ mvn package -f pom.xml
 echo '---- 构建完成'
 echo '---- 开始复制jar包'
 cp -rf ./backend/target/system-mk-backend.jar /home/jars/system-mk-backend.jar
-cp -rf ./backend/target/system-mk-front.jar /home/jars/system-mk-front.jar
+cp -rf ./front/target/system-mk-front.jar /home/jars/system-mk-front.jar
 
 echo '---- 复制完成'
