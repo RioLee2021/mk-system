@@ -9,6 +9,7 @@ import net.system.mk.commons.enums.VipLevel;
 import net.system.mk.commons.meta.PagerRequest;
 import net.system.mk.commons.meta.QOP;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
@@ -30,7 +31,8 @@ public class MbrInfoPagerRequest extends PagerRequest {
     @ApiModelProperty(value = "IP")
     private String ip;
 
-    @ApiModelProperty(value = "相同IP")
+    @ApiModelProperty(value = "是否只看重复IP",required = true)
+    @NotNull
     private Boolean sameIpOnly;
 
     @ApiModelProperty(value = "注册时间开始")
