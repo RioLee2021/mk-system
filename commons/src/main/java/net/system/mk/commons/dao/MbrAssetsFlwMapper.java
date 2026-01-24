@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Select;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 /**
@@ -27,4 +28,7 @@ public interface MbrAssetsFlwMapper extends BaseMapper<MbrAssetsFlw> {
 
     @Select("select ifnull(sum(amount),0) from mbr_assets_flw where mbr_id = #{mbrId} and type in (5,7) and create_at >= #{startTime}")
     BigDecimal sumAmountByMbrIdAndStartTime(@Param("mbrId") Integer mbrId, @Param("startTime") LocalDateTime startTime);
+
+    @Select("select * from mbr_assets_flw where mbr_id = #{mbrId}")
+    List<MbrAssetsFlw> getListByMbrId(@Param("mbrId")Integer mbrId);
 }

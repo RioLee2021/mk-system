@@ -16,4 +16,7 @@ public interface MbrAssetsMapper extends BaseMapper<MbrAssets> {
 
     @Select("select * from mbr_assets where mbr_id = #{mbrId} for update")
     MbrAssets getByMbrIdForUpdate(@Param("mbrId") Integer mbrId);
+
+    @Select("select * from mbr_assets where mbr_id = #{mbrId}")
+    MbrAssets getByMbrId(@Param("mbrId") Integer mbrId);
 }

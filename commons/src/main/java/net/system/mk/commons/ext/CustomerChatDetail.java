@@ -6,9 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import net.system.mk.commons.conf.MyLocalDateTimeDeserializer;
 import net.system.mk.commons.conf.MyLocalDateTimeSerializer;
 import net.system.mk.commons.pojo.ChatMsgLog;
+import net.system.mk.commons.pojo.MbrInfo;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.List;
  * @date 2026-01-2026/1/24/0024 0:05
  */
 @Data
+@Accessors(chain = true)
 public class CustomerChatDetail {
 
     @ApiModelProperty("聊天ID")
@@ -76,4 +79,5 @@ public class CustomerChatDetail {
 
     @ApiModelProperty("聊天记录")
     private List<ChatMsgLog> chatMsgLogs;
+
 }

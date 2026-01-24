@@ -28,5 +28,6 @@ public interface CustomerChatMapper extends BaseMapper<CustomerChat> {
             " from customer_chat cc inner join mbr_info mi on cc.mbr_id = mi.id ${ew.customSqlSegment}")
     IPage<CustomerChatResponse> getPageByEw(IPage<CustomerChatResponse> page, @Param("ew")QueryWrapper<Object> ew);
 
-
+    @Select("select * from customer_chat where mbr_id = #{mbrId} and customer_id = #{customerId}")
+    CustomerChat getOneByMbrIdAndCustomerId(@Param("mbrId") Integer mbrId, @Param("customerId") Integer customerId);
 }

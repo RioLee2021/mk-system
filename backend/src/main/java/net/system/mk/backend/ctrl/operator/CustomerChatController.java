@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author USER
@@ -73,7 +74,7 @@ public class CustomerChatController {
     @ApiOperation(value = "获取最新5条信息")
     @AuthCheck
     @MerchantOnly
-    public ResultBody<ChatMsgLog> latestMsg(@Valid @RequestBody BaseUpdateRequest request) {
+    public List<ChatMsgLog> latestMsg(@Valid @RequestBody BaseUpdateRequest request) {
         return service.latestMsg(request);
     }
 }

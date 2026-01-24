@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.system.mk.backend.ctrl.biz.vo.*;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
-import net.system.mk.commons.dao.MbrAssetsMapper;
-import net.system.mk.commons.dao.MbrInfoMapper;
-import net.system.mk.commons.dao.MbrRechargeRecordMapper;
-import net.system.mk.commons.dao.MbrWithdrawRecordMapper;
+import net.system.mk.commons.dao.*;
 import net.system.mk.commons.enums.AssetsFlwType;
 import net.system.mk.commons.enums.MbrStatus;
 import net.system.mk.commons.enums.MbrType;
@@ -23,10 +20,7 @@ import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.RequestBaseData;
 import net.system.mk.commons.meta.ResultBody;
-import net.system.mk.commons.pojo.MbrAssets;
-import net.system.mk.commons.pojo.MbrInfo;
-import net.system.mk.commons.pojo.MbrRechargeRecord;
-import net.system.mk.commons.pojo.MbrWithdrawRecord;
+import net.system.mk.commons.pojo.*;
 import net.system.mk.commons.serv.MbrAssetHelper;
 import net.system.mk.commons.utils.OtherUtils;
 import net.system.mk.commons.utils.ShareCodeUtils;
@@ -56,12 +50,14 @@ public class MbrInfoService {
     private MbrRechargeRecordMapper mbrRechargeRecordMapper;
     @Resource
     private MbrWithdrawRecordMapper mbrWithdrawRecordMapper;
-
     @Resource
     private MbrAssetHelper mbrAssetHelper;
-
+    @Resource
+    private CustomerChatMapper customerChatMapper;
     @Resource
     private ICtxHelper iCtxHelper;
+    @Resource
+    private CustomerChatService  customerChatService;
 
     public PagerResult<MbrInfo> list(MbrInfoPagerRequest request) {
         QueryWrapper<Object> q = OtherUtils.createIdDescWrapper(request, "mb");
@@ -213,6 +209,14 @@ public class MbrInfoService {
         if (!ctx.account().equals(mb.getCustomerAccount())){
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "无权限，不是你的客户");
         }
-        return ResultBody.okData(null);
+        CustomerChat cc = customerChatMapper.getOneByMbrIdAndCustomerId(request.getId(), ctx.id());
+        if (cc==null){
+            cc = new CustomerChat();
+            cc.setMbrId(request.getId()).setCustomerId(ctx.id());
+            customerChatMapper.insert(cc);
+        }
+        BaseUpdateRequest req = new BaseUpdateRequest();
+        req.setId(cc.getId());
+        return customerChatService.detail(req);
     }
 }
