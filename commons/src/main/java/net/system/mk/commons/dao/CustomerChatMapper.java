@@ -20,7 +20,7 @@ public interface CustomerChatMapper extends BaseMapper<CustomerChat> {
     @Select("select count(1) from customer_chat where customer_id=#{customerId} and reply_flg = false")
     Integer unReplyCntByCustomerId(@Param("customerId") Integer customerId);
 
-    @Select("select cc.mbr_id,mi.account, mi.login_ip as last_login_ip,cc.reply_flg, " +
+    @Select("select cc.id as chat_id, cc.mbr_id,mi.account, mi.login_ip as last_login_ip,cc.reply_flg, " +
             "(select if(cml1.image_flg,concat('img[',cml1.content,']'),cml1.content) from chat_msg_log cml1 where cml1.chat_id = cc.id and cml1.owner_id = cc.mbr_id order by cml1.id desc limit 1) as msg_content, " +
             "(select cml2.create_at from chat_msg_log cml2 where cml2.chat_id = cc.id and cml2.owner_id = cc.mbr_id order by  cml2.id desc limit 1) as send_time," +
             "(select if(cml3.image_flg,concat('img[',cml3.content,']'),cml3.content) from chat_msg_log cml3 where cml3.chat_id = cc.id and cml3.owner_id != cc.mbr_id order by cml3.id desc limit 1) as reply_content, " +

@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 @Data
 public class CustomerChatResponse {
 
+    @ApiModelProperty("聊天ID")
+    private Integer chatId;
+
     @ApiModelProperty("会员ID")
     private Integer mbrId;
 

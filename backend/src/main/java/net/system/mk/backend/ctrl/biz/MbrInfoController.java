@@ -14,6 +14,8 @@ import net.system.mk.commons.anno.menu.MerchantOnly;
 import net.system.mk.commons.anno.menu.PermMenuScan;
 import net.system.mk.commons.enums.MenuScope;
 import net.system.mk.commons.enums.PermMenuGroup;
+import net.system.mk.commons.ext.CustomerChatDetail;
+import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.commons.pojo.MbrInfo;
@@ -47,6 +49,14 @@ public class MbrInfoController {
     @MerchantInject
     public PagerResult<MbrInfo> list(@Valid @RequestBody MbrInfoPagerRequest request) {
         return service.list(request);
+    }
+
+    @PostMapping("/chat.do")
+    @ApiOperation(value = "发起聊天")
+    @AuthCheck
+    @MerchantOnly
+    public ResultBody<CustomerChatDetail> chat(@Valid @RequestBody BaseUpdateRequest request) {
+        return service.chat(request);
     }
 
     @ApiOperation(value = "新增会员")

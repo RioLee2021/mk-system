@@ -5,6 +5,8 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.system.mk.backend.ctrl.biz.vo.*;
+import net.system.mk.commons.ctx.IBaseContext;
+import net.system.mk.commons.ctx.ICtxHelper;
 import net.system.mk.commons.dao.MbrAssetsMapper;
 import net.system.mk.commons.dao.MbrInfoMapper;
 import net.system.mk.commons.dao.MbrRechargeRecordMapper;
@@ -15,7 +17,9 @@ import net.system.mk.commons.enums.MbrType;
 import net.system.mk.commons.enums.RecordStatus;
 import net.system.mk.commons.expr.GlobalErrorCode;
 import net.system.mk.commons.expr.GlobalException;
+import net.system.mk.commons.ext.CustomerChatDetail;
 import net.system.mk.commons.ip2region.IpSearcher;
+import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.RequestBaseData;
 import net.system.mk.commons.meta.ResultBody;
@@ -55,6 +59,9 @@ public class MbrInfoService {
 
     @Resource
     private MbrAssetHelper mbrAssetHelper;
+
+    @Resource
+    private ICtxHelper iCtxHelper;
 
     public PagerResult<MbrInfo> list(MbrInfoPagerRequest request) {
         QueryWrapper<Object> q = OtherUtils.createIdDescWrapper(request, "mb");
@@ -185,7 +192,7 @@ public class MbrInfoService {
         return ResultBody.success();
     }
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<Void> updCpMark(MbrCpMarkUpdRequest request) {
         MbrInfo mb = mbrInfoMapper.getByMerchantIdAndId(request.getMerchantId(), request.getId());
         if (mb==null){
@@ -194,5 +201,18 @@ public class MbrInfoService {
         mb.setCpMark(request.getCpMark());
         mbrInfoMapper.updateById(mb);
         return ResultBody.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
+    public ResultBody<CustomerChatDetail> chat(BaseUpdateRequest request) {
+        IBaseContext ctx = iCtxHelper.getBackendCtx();
+        MbrInfo mb = mbrInfoMapper.selectById(request.getId());
+        if (mb==null){
+            throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "会员不存在");
+        }
+        if (!ctx.account().equals(mb.getCustomerAccount())){
+            throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "无权限，不是你的客户");
+        }
+        return ResultBody.okData(null);
     }
 }
