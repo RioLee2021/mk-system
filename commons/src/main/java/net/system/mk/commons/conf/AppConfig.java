@@ -30,6 +30,8 @@ public class AppConfig implements ILoggerPrintAble {
     private Boolean testMode;
     @ApiModelProperty(value = "TG机器人TOKEN")
     private String tgBotToken;
+    @ApiModelProperty(value = "时区ID")
+    private String zoneId;
 
     @Override
     public String toLoggerPrintString() {

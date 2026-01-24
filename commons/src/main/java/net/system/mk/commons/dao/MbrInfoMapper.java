@@ -33,4 +33,13 @@ public interface MbrInfoMapper extends BaseMapper<MbrInfo> {
 
     @Update("update mbr_info set status = #{status} where relationship_route like concat(#{relationshipRoute},',%') and merchant_id = #{merchantId}")
     void updMbrStatusByRelationshipAndMerchantId(@Param("relationshipRoute")String relationshipRoute,@Param("status")MbrStatus status,@Param("merchantId")Integer merchantId);
+
+    @Select("select count(1) from mbr_info where phone = #{uk} or account = #{uk}")
+    int existsByUk(@Param("uk")String uk);
+
+    @Select("select * from mbr_info where invite_code = #{inviteCode}")
+    MbrInfo getOneByInviteCode(@Param("inviteCode")String inviteCode);
+
+    @Select("select * from mbr_info where phone = #{uk} or account = #{uk}")
+    MbrInfo getOneByUk(@Param("uk")String uk);
 }

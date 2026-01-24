@@ -1,5 +1,5 @@
 app:
-  system-version: '@backend.version@'
+  system-version: '@front.version@'
   name: ${spring.application.name}
   zone-offset: 8
   qps: 400
@@ -17,13 +17,13 @@ spring:
   jackson:
     time-zone: GMT+8
   application:
-    name: system-mk-backend
+    name: system-mk-front
   messages:
     basename: i18n/messages
     fallback-to-system-locale: false
     encoding: utf-8
 server:
-  port: 9060
+  port: 8060
   compression:
     enabled: true
     mime-types:
