@@ -123,7 +123,7 @@ public class CustomerChatService {
         customerChatMapper.updateById(cc);
         ChatMsgLog cml = new ChatMsgLog();
         String content = request.getContent();
-        cml.setCustomerFlg(Boolean.TRUE).setChatId(request.getChatId());
+        cml.setCustomerFlg(Boolean.TRUE).setChatId(request.getChatId()).setOwnerId(ctx.id());
         if (content.startsWith("img[")&&content.endsWith("]")){
             cml.setImageFlg(Boolean.TRUE);
             content = content.substring(4,content.length()-2);
