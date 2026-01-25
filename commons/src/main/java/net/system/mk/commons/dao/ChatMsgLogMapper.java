@@ -21,4 +21,7 @@ public interface ChatMsgLogMapper extends BaseMapper<ChatMsgLog> {
 
     @Select("select * from chat_msg_log where chat_id = #{chatId} order by id desc limit 5")
     List<ChatMsgLog> getLatest5MsgByChatId(@Param("chatId")Integer chatId);
+
+    @Select("select cml.* from chat_msg_log cml inner join customer_chat cc on cml.chat_id = cc.id where cc.mbr_id = #{mbrId} and cml.id > #{lastId} order by cml.id")
+    List<ChatMsgLog> getLatestMsgByMbrIdAndLastId(@Param("mbrId")Integer mbrId, @Param("lastId")Integer lastId);
 }

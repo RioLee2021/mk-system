@@ -27,6 +27,8 @@ public class RequestBaseData {
 
     public static final String MERCHANT_CODE = "MerchantCode";
 
+    public static final String ACCEPT_LANGUAGE = "Accept-Language";
+
     private String traceId;
 
     private String uri;
@@ -45,6 +47,8 @@ public class RequestBaseData {
 
     private String merchantCode;
 
+    private String language;
+
     private RequestBaseData(){}
 
     public static RequestBaseData getInstance(){
@@ -62,6 +66,7 @@ public class RequestBaseData {
         rs.uri = request.getRequestURI();
         rs.ip = WebUtils.getRemoteAddress(request);
         rs.token = request.getHeader(AUTHORIZATION);
+        rs.language = request.getHeader(ACCEPT_LANGUAGE);
         rs.token = rs.getToken()==null?"undefined":rs.getToken();
         Object tid = request.getAttribute(TRACE_ID);
         rs.traceId = tid==null? "tce-"+ IdUtil.fastSimpleUUID() :tid.toString();

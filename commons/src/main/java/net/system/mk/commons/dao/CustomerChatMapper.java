@@ -8,6 +8,7 @@ import net.system.mk.commons.pojo.CustomerChat;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 
 /**
@@ -30,4 +31,7 @@ public interface CustomerChatMapper extends BaseMapper<CustomerChat> {
 
     @Select("select * from customer_chat where mbr_id = #{mbrId} and customer_id = #{customerId}")
     CustomerChat getOneByMbrIdAndCustomerId(@Param("mbrId") Integer mbrId, @Param("customerId") Integer customerId);
+
+    @Update("update customer_chat set reply_flg = #{replyFlg} where id = #{chatId}")
+    void submitReply(@Param("chatId") Integer chatId, @Param("replyFlg") Boolean replyFlg);
 }

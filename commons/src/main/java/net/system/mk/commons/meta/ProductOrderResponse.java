@@ -1,27 +1,19 @@
-package net.system.mk.commons.pojo;
+package net.system.mk.commons.meta;
 
-import com.baomidou.mybatisplus.annotation.TableField;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.experimental.Accessors;
+import net.system.mk.commons.pojo.OrderPdRecord;
+
+import java.math.BigDecimal;
 
 /**
- * 产品信息
+ * @author USER
+ * @date 2026-01-2026/1/25/0025 12:38
  */
-@ApiModel(description = "产品信息")
-@Data
 @EqualsAndHashCode(callSuper = true)
-@Accessors(chain = true)
-public class ProductInfo extends BasePO {
-    /**
-     * 品牌ID
-     */
-    @ApiModelProperty(value = "品牌ID")
-    private Integer brandId;
+@Data
+public class ProductOrderResponse extends OrderPdRecord {
 
     /**
      * 产品名称
@@ -53,17 +45,6 @@ public class ProductInfo extends BasePO {
     @ApiModelProperty(value = "标签价格")
     private BigDecimal labelPrice;
 
-    /**
-     * 拼单价格
-     */
-    @ApiModelProperty(value = "拼单价格")
-    private BigDecimal orderPrice;
-
-    /**
-     * 佣金金额
-     */
-    @ApiModelProperty(value = "佣金金额")
-    private BigDecimal commission;
 
     /**
      * 产品描述
@@ -76,8 +57,4 @@ public class ProductInfo extends BasePO {
      */
     @ApiModelProperty(value = "优惠标识")
     private Boolean specialOffer;
-
-    @ApiModelProperty(value = "订单编号",notes = "非数据库字段")
-    @TableField(exist = false)
-    private String orderNo;
 }

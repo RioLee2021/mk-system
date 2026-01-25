@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import net.system.mk.commons.pojo.MbrPdRequest;
+import net.system.mk.commons.pojo.ProductInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -21,4 +22,9 @@ public interface MbrPdRequestMapper extends BaseMapper<MbrPdRequest> {
 
     @Select("select count(1) from mbr_pd_request where pd_no is null")
     Integer getRunningCnt();
+
+    @Select("select * from mbr_pd_request where mbr_id = #{mbrId} and pd_no is null")
+    int cntRequestingByMbrId(@Param("mbrId") Integer mbrId);
+
+
 }

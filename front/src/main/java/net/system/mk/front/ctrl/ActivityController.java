@@ -1,7 +1,11 @@
 package net.system.mk.front.ctrl;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import net.system.mk.commons.anno.AuthCheck;
+import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.front.serv.ActivityService;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,4 +22,11 @@ public class ActivityController {
 
     @Resource
     private ActivityService service;
+
+    @PostMapping("/activityRequest.do")
+    @ApiOperation(value = "申请活动")
+    @AuthCheck
+    public ResultBody<Void> activityRequest() {
+        return service.activityRequest();
+    }
 }

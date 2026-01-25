@@ -31,6 +31,14 @@ public class MbrAssetHelper {
     @Resource
     private MbrAssetsFlwMapper mbrAssetsFlwMapper;
 
+    @DistributedLock(keyPrefix = "mbrAssetHelper:submitAssetChange:", key = "#mbrId")
+    public void checkBalance(Integer mbrId, BigDecimal amount){
+        MbrAssets mba = mbrAssetsMapper.getByMbrId(mbrId);
+        if (mba.getBalance().compareTo(amount.abs())<0){
+            throw new GlobalException(GlobalErrorCode.BALANCE_NOT_ENOUGH);
+        }
+    }
+
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     @DistributedLock(keyPrefix = "mbrAssetHelper:submitAssetChange:", key = "#mbrId")
     public String submitAssetChange(Integer mbrId, BigDecimal amount, AssetsFlwType type,String remark,Object relatedNo,Integer relatedId){
