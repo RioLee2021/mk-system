@@ -188,7 +188,7 @@ public class MineService {
         ChatMsgLog cml = new ChatMsgLog();
         String content = request.getContent();
         if (content.startsWith("img[")&&content.endsWith("]")){
-            content = content.substring(4,content.length()-2);
+            content = content.replaceFirst("^img\\[(.*)\\]$", "$1");
             cml.setImageFlg(Boolean.TRUE);
         }
         cml.setContent(content).setChatId(request.getChatId()).setCustomerFlg(Boolean.FALSE).setOwnerId(ctx.id());

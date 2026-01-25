@@ -126,7 +126,7 @@ public class CustomerChatService {
         cml.setCustomerFlg(Boolean.TRUE).setChatId(request.getChatId()).setOwnerId(ctx.id());
         if (content.startsWith("img[")&&content.endsWith("]")){
             cml.setImageFlg(Boolean.TRUE);
-            content = content.substring(4,content.length()-2);
+            content = content.replaceFirst("^img\\[(.*)\\]$", "$1");
         }
         cml.setContent(content);
         chatMsgLogMapper.insert(cml);
