@@ -42,4 +42,7 @@ public interface PermMenuMapper extends BaseMapper<PermMenu> {
 
     @Select("select pm.* from perm_menu pm where (menu_scope = 0 or menu_scope = #{scope}) and uri_flag = true order by perm_menu_group,sort_no")
     List<PermMenu> getUriMenuByMenuScope(@Param("scope") MenuScope scope);
+
+    @Select("select pm.menu_path from auth_menu_config amc inner join perm_menu pm on amc.menu_id = pm.id and pm.uri_flag = true where amc.role_type = #{roleType}")
+    List<String> getUriByRoleType(@Param("roleType") RoleType roleType);
 }

@@ -9,6 +9,7 @@ import net.system.mk.backend.ctrl.vo.CurrentTaskCnt;
 import net.system.mk.backend.ctrl.vo.PermMenuTree;
 import net.system.mk.backend.ctrl.vo.PermUserLoginRequest;
 import net.system.mk.commons.conf.OptionsTableNameHandler;
+import net.system.mk.commons.constant.RedisCodeKey;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
 import net.system.mk.commons.dao.*;
@@ -20,6 +21,7 @@ import net.system.mk.commons.pojo.MerchantConfig;
 import net.system.mk.commons.pojo.PermMenu;
 import net.system.mk.commons.pojo.PermUser;
 import net.system.mk.commons.pojo.PermUserLoginLog;
+import net.system.mk.commons.redis.RedisHelper;
 import net.system.mk.commons.utils.OtherUtils;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +66,8 @@ public class PubService {
     private MbrWithdrawRecordMapper mbrWithdrawRecordMapper;
     @Resource
     private MbrPdRequestMapper mbrPdRequestMapper;
+    @Resource
+    private RedisHelper redisHelper;
 
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
@@ -83,6 +87,7 @@ public class PubService {
         //判断是否有旧的TOKEN
         if (StrUtil.isNotBlank(usr.getToken())) {
             ctxHelper.kickBackendCtx(usr.getToken());
+            redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,usr.getToken());
         }
         String token = "b#" + IdUtil.fastSimpleUUID();
         usr.setToken(token);
@@ -97,6 +102,7 @@ public class PubService {
         }
         permUserLoginLogMapper.insert(log);
         ctxHelper.putBackendCtx(usr);
+        redisHelper.set(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,token,permMenuMapper.getUriByRoleType(usr.role()));
         return ResultBody.okData(usr);
     }
 
@@ -107,6 +113,7 @@ public class PubService {
         usr.setToken(null);
         permUserMapper.updateById(usr);
         ctxHelper.kickBackendCtx(ctx.token());
+        redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,ctx.token());
         return ResultBody.success();
     }
 
