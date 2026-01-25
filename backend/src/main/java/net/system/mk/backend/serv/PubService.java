@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import net.system.mk.backend.ctrl.vo.CurrentTaskCnt;
 import net.system.mk.backend.ctrl.vo.PermMenuTree;
 import net.system.mk.backend.ctrl.vo.PermUserLoginRequest;
+import net.system.mk.commons.conf.AppConfig;
 import net.system.mk.commons.conf.OptionsTableNameHandler;
 import net.system.mk.commons.constant.RedisCodeKey;
 import net.system.mk.commons.ctx.IBaseContext;
@@ -27,8 +28,11 @@ import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -68,6 +72,8 @@ public class PubService {
     private MbrPdRequestMapper mbrPdRequestMapper;
     @Resource
     private RedisHelper redisHelper;
+    @Resource
+    private AppConfig appConfig;
 
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
@@ -87,7 +93,7 @@ public class PubService {
         //判断是否有旧的TOKEN
         if (StrUtil.isNotBlank(usr.getToken())) {
             ctxHelper.kickBackendCtx(usr.getToken());
-            redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,usr.getToken());
+            redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE, usr.getToken());
         }
         String token = "b#" + IdUtil.fastSimpleUUID();
         usr.setToken(token);
@@ -102,7 +108,7 @@ public class PubService {
         }
         permUserLoginLogMapper.insert(log);
         ctxHelper.putBackendCtx(usr);
-        redisHelper.set(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,token,permMenuMapper.getUriByRoleType(usr.role()));
+        redisHelper.set(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE, token, permMenuMapper.getUriByRoleType(usr.role()));
         return ResultBody.okData(usr);
     }
 
@@ -113,7 +119,7 @@ public class PubService {
         usr.setToken(null);
         permUserMapper.updateById(usr);
         ctxHelper.kickBackendCtx(ctx.token());
-        redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE,ctx.token());
+        redisHelper.deleteTouch(RedisCodeKey.Backend.BACKEND_USER_LOGIN_TOKEN_PRIVILEGE, ctx.token());
         return ResultBody.success();
     }
 
@@ -228,5 +234,24 @@ public class PubService {
         rs.setWithdrawCnt(mbrWithdrawRecordMapper.unProcessedCnt());
         rs.setPdReqCnt(mbrPdRequestMapper.getRunningCnt());
         return ResultBody.okData(rs);
+    }
+
+    public ResultBody<String> upload(MultipartFile file) {
+        File root = new File(appConfig.getUploadRoot());
+        String originalFilename = file.getOriginalFilename();
+        String filename = IdUtil.fastSimpleUUID();
+        if (originalFilename != null) {
+            int lastDotIndex = originalFilename.lastIndexOf(".");
+            if (lastDotIndex > 0) {
+                filename += originalFilename.substring(lastDotIndex);
+            }
+        }
+        File target = new File(root, filename);
+        try {
+            file.transferTo(target);
+            return ResultBody.okData("/upload/" + filename);
+        } catch (IOException e) {
+            throw new GlobalException(BUSINESS_ERROR, "文件上传失败");
+        }
     }
 }

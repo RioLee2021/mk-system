@@ -12,10 +12,8 @@ import net.system.mk.commons.meta.DictResponse;
 import net.system.mk.commons.meta.OptionsTypeRequest;
 import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.commons.pojo.PermUser;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -34,6 +32,13 @@ public class PubController {
 
     @Resource
     private PubService service;
+
+    @PostMapping("/upload.do")
+    @ApiOperation(value = "上传图片")
+    @AuthCheck
+    public ResultBody<String> upload(@RequestParam("file") MultipartFile file) {
+        return service.upload(file);
+    }
 
     @PostMapping("/currentTaskCnt.do")
     @ApiOperation(value = "当前消息数量")

@@ -24,3 +24,4 @@ spring:
         database: ${spring.redis.database}
 app:
   ip-xdb-path: E:/work/movie_lite_server/movie/deploy/ip2region.xdb
+  upload-root: E:/work/movie_lite_server/movie/deploy

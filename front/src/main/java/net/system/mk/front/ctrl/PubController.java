@@ -9,10 +9,8 @@ import net.system.mk.front.ctrl.vo.MbeRegisterRequest;
 import net.system.mk.front.ctrl.vo.MbrLoginRequest;
 import net.system.mk.front.ctx.MemberContext;
 import net.system.mk.front.serv.PubService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -53,5 +51,12 @@ public class PubController {
     @AuthCheck(ctxScope = CtxScope.wap)
     public ResultBody<MemberContext> info() {
         return service.info();
+    }
+
+    @PostMapping("/upload.do")
+    @ApiOperation(value = "上传图片")
+    @AuthCheck
+    public ResultBody<String> upload(@RequestParam("file") MultipartFile file) {
+        return service.upload(file);
     }
 }

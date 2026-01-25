@@ -26,9 +26,12 @@ import net.system.mk.front.ctrl.vo.MbrLoginRequest;
 import net.system.mk.front.ctx.MemberContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -152,5 +155,24 @@ public class PubService {
         ctx.setTodayEarnings(mbrAssetsFlwMapper.sumAmountByMbrIdAndStartTime(ctx.id(), today.atStartOfDay()));
         ctx.setTotalRevenue(mbrAssetsFlwMapper.sumAmountByMbrId(ctx.id()));
         return ResultBody.okData(ctx);
+    }
+
+    public ResultBody<String> upload(MultipartFile file) {
+        File root = new File(appConfig.getUploadRoot());
+        String originalFilename = file.getOriginalFilename();
+        String filename = IdUtil.fastSimpleUUID();
+        if (originalFilename != null) {
+            int lastDotIndex = originalFilename.lastIndexOf(".");
+            if (lastDotIndex > 0) {
+                filename += originalFilename.substring(lastDotIndex);
+            }
+        }
+        File target = new File(root, filename);
+        try {
+            file.transferTo(target);
+            return ResultBody.okData("/upload/" + filename);
+        } catch (IOException e) {
+            throw new GlobalException(BUSINESS_ERROR, "文件上传失败");
+        }
     }
 }

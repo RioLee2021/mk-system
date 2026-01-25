@@ -32,6 +32,8 @@ public class AppConfig implements ILoggerPrintAble {
     private String tgBotToken;
     @ApiModelProperty(value = "时区ID")
     private String zoneId;
+    @ApiModelProperty(value = "上传根目录")
+    private String uploadRoot;
 
     @Override
     public String toLoggerPrintString() {
