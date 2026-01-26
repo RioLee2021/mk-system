@@ -74,6 +74,7 @@ public class MbrInfoService {
         if (request.getSameIpOnly()) {
             q.and(oc -> oc.gt("login_stat.cnt", 1).or().gt("reg_stat.cnt", 1));
         }
+        q.groupBy("mb.id");
         return PagerResult.of(mbrInfoMapper.getPageByEw(request.toPage(), q));
     }
 
