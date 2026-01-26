@@ -249,7 +249,7 @@ public class PubService {
         File target = new File(root, filename);
         try {
             file.transferTo(target);
-            return ResultBody.okData("/upload/" + filename);
+            return ResultBody.okData("/" + filename);
         } catch (IOException e) {
             throw new GlobalException(BUSINESS_ERROR, "文件上传失败");
         }
