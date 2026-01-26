@@ -120,8 +120,7 @@ public class CloudflareR2Client {
         try {
             PutObjectResponse rs = s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             // 构建并返回访问链接
-            return String.format("%s/%s/%s",
-                    config.getEndpoint(), bucketName, objectKey);
+            return "https://pub-16f402aa38dd446fb50eb074dabb9c3f.r2.dev/"+directory+"/"+filename;
         } catch (IOException e) {
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, e.getMessage());
         }

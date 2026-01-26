@@ -35,7 +35,6 @@ public class PubController {
 
     @PostMapping("/upload.do")
     @ApiOperation(value = "上传图片")
-    @AuthCheck
     public ResultBody<String> upload(@RequestParam("file") MultipartFile file) {
         return service.upload(file);
     }
