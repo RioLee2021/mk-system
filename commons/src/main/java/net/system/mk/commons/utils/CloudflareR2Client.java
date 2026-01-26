@@ -115,6 +115,7 @@ public class CloudflareR2Client {
                 .key(objectKey)
                 .contentLength(file.getSize())
                 .contentType(file.getContentType())
+                .acl(ObjectCannedACL.PUBLIC_READ)
                 .build();
         try {
             PutObjectResponse rs = s3Client.putObject(request, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
