@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import net.system.mk.backend.aop.PermissionInterceptor;
 import net.system.mk.backend.aop.RepeatSubmitAop;
 import net.system.mk.commons.conf.*;
+import net.system.mk.commons.utils.CloudflareR2Client;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,6 +36,12 @@ public class MyMvcConfig implements WebMvcConfigurer {
     private PermissionInterceptor interceptor;
     @Resource
     private RepeatSubmitAop repeatSubmitAop;
+
+    @Bean
+    public CloudflareR2Client cloudflareR2Client(){
+        CloudflareR2Client.S3Config config = new CloudflareR2Client.S3Config();
+        return new CloudflareR2Client(config);
+    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

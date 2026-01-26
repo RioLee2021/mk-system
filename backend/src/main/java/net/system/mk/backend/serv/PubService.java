@@ -23,6 +23,7 @@ import net.system.mk.commons.pojo.PermMenu;
 import net.system.mk.commons.pojo.PermUser;
 import net.system.mk.commons.pojo.PermUserLoginLog;
 import net.system.mk.commons.redis.RedisHelper;
+import net.system.mk.commons.utils.CloudflareR2Client;
 import net.system.mk.commons.utils.OtherUtils;
 import org.reflections.Reflections;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,6 +75,8 @@ public class PubService {
     private RedisHelper redisHelper;
     @Resource
     private AppConfig appConfig;
+    @Resource
+    private CloudflareR2Client cloudflareR2Client;
 
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
@@ -237,6 +240,10 @@ public class PubService {
     }
 
     public ResultBody<String> upload(MultipartFile file) {
+        return ResultBody.okData(cloudflareR2Client.uploadFile("cdn-mk","pic",file));
+    }
+
+    public ResultBody<String> upload2(MultipartFile file) {
         File root = new File(appConfig.getUploadRoot());
         String originalFilename = file.getOriginalFilename();
         String filename = IdUtil.fastSimpleUUID();
