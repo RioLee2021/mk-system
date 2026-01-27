@@ -50,6 +50,7 @@ public class NoticeRecordService {
         if (data==null){
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "数据不存在");
         }
+        BeanUtil.copyProperties(request,data);
         noticeRecordMapper.updateById(data);
     }
 }
