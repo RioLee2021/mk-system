@@ -30,7 +30,7 @@ public class ProductInfoExcel {
     @ExcelProperty(value = "标签价格",index = 4)
     private String labelPrice;
 
-    @ExcelProperty(value = "拼价格",index = 5)
+    @ExcelProperty(value = "拼单价格",index = 5)
     private String orderPrice;
 
     @ExcelProperty(value = "佣金",index = 6)

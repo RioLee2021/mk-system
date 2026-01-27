@@ -12,6 +12,7 @@ import net.system.mk.commons.anno.menu.PermMenuScan;
 import net.system.mk.commons.enums.MenuScope;
 import net.system.mk.commons.enums.PermMenuGroup;
 import net.system.mk.commons.meta.BaseUpdateRequest;
+import net.system.mk.commons.meta.DictItem;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.commons.pojo.ProductInfo;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @author USER
@@ -41,6 +43,14 @@ public class ProductInfoController {
     @MerchantOnly
     public PagerResult<ProductInfo> list(@Valid @RequestBody ProductInfoPagerRequest request) {
         return service.list(request);
+    }
+
+    @PostMapping("/brandOps.do")
+    @ApiOperation(value = "商户ID下拉")
+    @AuthCheck
+    @MerchantOnly
+    public List<DictItem> brandOps() {
+        return service.brandOps();
     }
 
     @PostMapping("/add.do")

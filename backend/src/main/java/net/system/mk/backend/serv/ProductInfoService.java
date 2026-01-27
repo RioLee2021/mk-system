@@ -5,11 +5,13 @@ import com.alibaba.excel.EasyExcel;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
 import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
+import net.system.mk.commons.dao.BrandInfoMapper;
 import net.system.mk.commons.dao.ProductInfoMapper;
 import net.system.mk.commons.expr.GlobalException;
 import net.system.mk.commons.ext.ProductInfoExcel;
 import net.system.mk.commons.ext.listener.ProductInfoListener;
 import net.system.mk.commons.meta.BaseUpdateRequest;
+import net.system.mk.commons.meta.DictItem;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.commons.pojo.ProductInfo;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import static net.system.mk.commons.expr.GlobalErrorCode.BUSINESS_ERROR;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
@@ -37,6 +40,8 @@ public class ProductInfoService {
 
     @Resource
     private ProductInfoMapper productInfoMapper;
+    @Resource
+    private BrandInfoMapper brandInfoMapper;
 
     public PagerResult<ProductInfo> list(ProductInfoPagerRequest request) {
         return PagerResult.of(productInfoMapper.selectPage(request.toPage(), OtherUtils.createIdDescWrapper(request)));
@@ -104,5 +109,9 @@ public class ProductInfoService {
             }
         }
         return ResultBody.success();
+    }
+
+    public List<DictItem> brandOps() {
+        return brandInfoMapper.brandOps();
     }
 }
