@@ -3,6 +3,7 @@ package net.system.mk.front.ctrl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.system.mk.commons.anno.AuthCheck;
+import net.system.mk.commons.enums.CtxScope;
 import net.system.mk.commons.meta.ResultBody;
 import net.system.mk.front.serv.ActivityService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class ActivityController {
 
     @PostMapping("/activityRequest.do")
     @ApiOperation(value = "申请活动")
-    @AuthCheck
+    @AuthCheck(ctxScope = CtxScope.wap)
     public ResultBody<Void> activityRequest() {
         return service.activityRequest();
     }

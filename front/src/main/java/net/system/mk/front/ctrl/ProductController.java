@@ -3,6 +3,7 @@ package net.system.mk.front.ctrl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.system.mk.commons.anno.AuthCheck;
+import net.system.mk.commons.enums.CtxScope;
 import net.system.mk.commons.meta.BaseUpdateRequest;
 import net.system.mk.commons.meta.PagerResult;
 import net.system.mk.commons.meta.ResultBody;
@@ -32,14 +33,14 @@ public class ProductController {
 
     @ApiOperation(value = "产品列表")
     @PostMapping("/list.do")
-    @AuthCheck
+    @AuthCheck(ctxScope = CtxScope.wap)
     public PagerResult<ProductInfo> list(@Valid @RequestBody ProductInfoPagerRequest request) {
         return service.list(request);
     }
 
     @PostMapping("/buy.do")
     @ApiOperation(value = "购买产品")
-    @AuthCheck
+    @AuthCheck(ctxScope = CtxScope.wap)
     public ResultBody<Void> buy(@Valid @RequestBody BaseUpdateRequest request) {
         return service.buy(request);
     }
