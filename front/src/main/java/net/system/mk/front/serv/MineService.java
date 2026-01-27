@@ -56,24 +56,22 @@ public class MineService {
 
     public PagerResult<MbrRechargeRecord> rechargeRecord(PagerRequest request) {
         IBaseContext ctx = iCtxHelper.getWebCtx();
-        QueryWrapper<MbrRechargeRecord> q = OtherUtils.createIdDescWrapper(request);
-        q.eq("mbr_id", ctx.id());
+        QueryWrapper<MbrRechargeRecord> q = new QueryWrapper<>();
+        q.eq("mbr_id", ctx.id()).orderByDesc("id");
         return PagerResult.of(mbrRechargeRecordMapper.selectPage(request.toPage(), q));
     }
 
     public PagerResult<MbrWithdrawRecord> withdrawRecord(PagerRequest request) {
         IBaseContext ctx = iCtxHelper.getWebCtx();
-        QueryWrapper<MbrWithdrawRecord> q = OtherUtils.createIdDescWrapper(request);
-        q.eq("mbr_id", ctx.id());
+        QueryWrapper<MbrWithdrawRecord> q = new QueryWrapper<>();
+        q.eq("mbr_id", ctx.id()).orderByDesc("id");
         return PagerResult.of(mbrWithdrawRecordMapper.selectPage(request.toPage(), q));
     }
 
     public PagerResult<MbrAssetsFlw> fundDetails(PagerRequest request) {
         IBaseContext ctx = iCtxHelper.getWebCtx();
-        log.warn("当前CTX：{}",ctx);
-        QueryWrapper<MbrAssetsFlw> q = OtherUtils.createIdDescWrapper(request);
-        log.warn("当前Q：{},当前ID：{}",q,ctx.id());
-        q.eq("mbr_id", ctx.id());
+        QueryWrapper<MbrAssetsFlw> q = new QueryWrapper<>();
+        q.eq("mbr_id", ctx.id()).orderByDesc("id");
         return PagerResult.of(mbrAssetsFlwMapper.selectPage(request.toPage(), q));
     }
 
