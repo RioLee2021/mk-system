@@ -1,5 +1,6 @@
 package net.system.mk.backend.conf;
 
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -13,15 +14,19 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.format.Formatter;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author USER
@@ -36,6 +41,25 @@ public class MyMvcConfig implements WebMvcConfigurer {
     private PermissionInterceptor interceptor;
     @Resource
     private RepeatSubmitAop repeatSubmitAop;
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addFormatterForFieldType(String.class, new Formatter<String>() {
+
+            @Override
+            public String print(String s, Locale locale) {
+                return s;
+            }
+
+            @Override
+            public String parse(String s, Locale locale) throws ParseException {
+                if (StrUtil.isBlank(s)){
+                    return null;
+                }
+                return s;
+            }
+        });
+    }
 
     @Bean
     public CloudflareR2Client cloudflareR2Client(){
