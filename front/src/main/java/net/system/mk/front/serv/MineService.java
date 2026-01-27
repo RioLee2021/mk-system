@@ -2,6 +2,7 @@ package net.system.mk.front.serv;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
 import net.system.mk.commons.dao.*;
@@ -32,6 +33,7 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRED;
  * @date 2026-01-2026/1/24/0024 11:56
  */
 @Service
+@Slf4j
 public class MineService {
 
     @Resource
@@ -68,7 +70,9 @@ public class MineService {
 
     public PagerResult<MbrAssetsFlw> fundDetails(PagerRequest request) {
         IBaseContext ctx = iCtxHelper.getWebCtx();
+        log.warn("当前CTX：{}",ctx);
         QueryWrapper<MbrAssetsFlw> q = OtherUtils.createIdDescWrapper(request);
+        log.warn("当前Q：{},当前ID：{}",q,ctx.id());
         q.eq("mbr_id", ctx.id());
         return PagerResult.of(mbrAssetsFlwMapper.selectPage(request.toPage(), q));
     }
