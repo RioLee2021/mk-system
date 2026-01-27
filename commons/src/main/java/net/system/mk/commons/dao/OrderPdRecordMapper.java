@@ -24,7 +24,7 @@ public interface OrderPdRecordMapper extends BaseMapper<OrderPdRecord> {
     @Select("select opr.*,mi.vip_level,mi.phone from order_pd_record opr left join mbr_info mi on opr.mbr_id = opr.id where opr.order_no = #{orderNo} order by id")
     List<OrderPdRecord> getListByOrderNo(@Param("orderNo") String orderNo);
 
-    @Select("select opr.*,mi.vip_level,mi.phone from order_pd_record opr inner join mbr_info mi on opr.mbr_id = opr.id ${ew.customSqlSegment}")
+    @Select("select opr.*,mi.vip_level,mi.phone from order_pd_record opr inner join mbr_info mi on opr.mbr_id = mi.id ${ew.customSqlSegment}")
     IPage<OrderPdRecord> getPageByEw(IPage<OrderPdRecord> page, @Param("ew")QueryWrapper<Object> ew);
 
     @Select("select pi.id,pi.product_name,pi.pic1_url,pi.pic2_url,pi.pic3_url,pi.label_price,opr.order_price,opr.commission,pi.product_desc,pi.special_offer,opr.order_no from order_pd_record opr inner join order_record ord on ord.order_no = opr.order_no inner join product_info pi on ord.product_id = pi.id  where pd_status = 0 and mbr_id = #{mbrId} limit 1")
