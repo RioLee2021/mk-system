@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
 import net.system.mk.commons.dao.*;
+import net.system.mk.commons.enums.MbrType;
 import net.system.mk.commons.enums.OrderPdStatus;
 import net.system.mk.commons.expr.GlobalErrorCode;
 import net.system.mk.commons.expr.GlobalException;
@@ -123,7 +124,7 @@ public class MineService {
         if (!mb.getWithdrawPassword().equals(request.getWithdrawPassword())){
             throw new GlobalException(BUSINESS_ERROR, "withdraw password error");
         }
-        mb.setActualName(request.getActualName()).setBankName(request.getBankName()).setBankCardNo(request.getBankCardNo());
+        mb.setActualName(request.getActualName()).setBankName(request.getBankName()).setBankCardNo(request.getBankCardNo()).setMbrType(MbrType.active);
         mbrInfoMapper.updateById(mb);
         ctx.loadMbrInfo(mb);
         iCtxHelper.putWebCtx(ctx);
