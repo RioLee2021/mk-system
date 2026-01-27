@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import net.system.mk.commons.ctx.IBaseContext;
 import net.system.mk.commons.ctx.ICtxHelper;
 import net.system.mk.commons.dao.*;
+import net.system.mk.commons.enums.AssetsFlwType;
 import net.system.mk.commons.enums.MbrType;
 import net.system.mk.commons.enums.OrderPdStatus;
 import net.system.mk.commons.expr.GlobalErrorCode;
 import net.system.mk.commons.expr.GlobalException;
 import net.system.mk.commons.meta.*;
 import net.system.mk.commons.pojo.*;
+import net.system.mk.commons.serv.MbrAssetHelper;
 import net.system.mk.commons.utils.OtherUtils;
 import net.system.mk.front.ctrl.vo.AvatarUpdRequest;
 import net.system.mk.front.ctrl.vo.BankInfoSaveRequest;
@@ -54,6 +56,8 @@ public class MineService {
     private ChatMsgLogMapper chatMsgLogMapper;
     @Resource
     private CustomerChatMapper customerChatMapper;
+    @Resource
+    private MbrAssetHelper mbrAssetHelper;
 
     public PagerResult<MbrRechargeRecord> rechargeRecord(PagerRequest request) {
         IBaseContext ctx = iCtxHelper.getWebCtx();
@@ -197,6 +201,20 @@ public class MineService {
         cml.setContent(content).setChatId(request.getChatId()).setCustomerFlg(Boolean.FALSE).setOwnerId(ctx.id());
         chatMsgLogMapper.insert(cml);
         customerChatMapper.submitReply(request.getChatId(), Boolean.FALSE);
+        return ResultBody.success();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
+    public ResultBody<Void> payOrder(BaseUpdateRequest request) {
+        IBaseContext  ctx = iCtxHelper.getWebCtx();
+        OrderPdRecord opr = orderPdRecordMapper.getPdRecordByIdAndMbrId(request.getId(), ctx.id());
+        if (opr == null){
+            throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "Please match the order in the system");
+        }
+        mbrAssetHelper.checkBalance(ctx.id(),opr.getOrderPrice());
+        mbrAssetHelper.submitAssetChange(ctx.id(),opr.getOrderPrice(), AssetsFlwType.order_payment_reduce, "拼单购买", opr.getOrderNo());
+        opr.setPdStatus(OrderPdStatus.paid);
+        orderPdRecordMapper.updateById(opr);
         return ResultBody.success();
     }
 }

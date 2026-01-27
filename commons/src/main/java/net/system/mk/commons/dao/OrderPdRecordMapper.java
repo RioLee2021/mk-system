@@ -33,6 +33,9 @@ public interface OrderPdRecordMapper extends BaseMapper<OrderPdRecord> {
     @Select("select opr.* from order_pd_record opr inner join order_record ord on ord.order_no = opr.order_no where pd_status = 0 and mbr_id = #{mbrId} and ord.product_id = #{productId} limit 1")
     OrderPdRecord getPdRecordByMbrIdAndProductId(@Param("mbrId")Integer mbrId,@Param("productId")Integer productId);
 
+    @Select("select opr.* from order_pd_record opr where opr.id = #{id} and opr.mbr_id = #{mbrId}")
+    OrderPdRecord getPdRecordByIdAndMbrId(@Param("id")Integer id,@Param("mbrId")Integer mbrId);
+
     @Select("select opr.*,pi.product_name,pi.pic1_url,pi.pic2_url,pi.pic3_url,pi.label_price,pi.product_desc,pi.special_offer from order_pd_record opr inner join order_record ord on ord.order_no = opr.order_no inner join product_info pi on ord.product_id = pi.id where opr.mbr_id = #{mbrId} and opr.pd_status = #{pdStatus}")
     IPage<ProductOrderResponse> getProductOrderResponsePageByMbrIdAndPdStatus(IPage<ProductOrderResponse> page, @Param("mbrId")Integer mbrId, @Param("pdStatus") OrderPdStatus pdStatus);
 

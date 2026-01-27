@@ -65,6 +65,13 @@ public class MineController {
         return service.awaitPayOrder(request);
     }
 
+    @PostMapping("/payOrder.do")
+    @ApiOperation(value = "订单付款")
+    @AuthCheck(ctxScope = wap)
+    public ResultBody<Void> payOrder(@Valid @RequestBody BaseUpdateRequest request) {
+        return service.payOrder(request);
+    }
+
     @PostMapping("/completedOrder.do")
     @ApiOperation(value = "已完成订单")
     @AuthCheck(ctxScope = wap)
