@@ -23,10 +23,10 @@ public interface MbrAssetsFlwMapper extends BaseMapper<MbrAssetsFlw> {
     @Select("select maf.* from mbr_assets_flw maf inner join mbr_info mb on maf.mbr_id = mb.id ${ew.customSqlSegment}")
     IPage<MbrAssetsFlw> getPageByEw(@Param("page") IPage<MbrAssetsFlw> page, @Param("ew") QueryWrapper<Object> ew);
 
-    @Select("select ifnull(sum(amount),0) from mbr_assets_flw where mbr_id = #{mbrId} and type in (5,7)")
+    @Select("select ifnull(sum(amount),0) from mbr_assets_flw where mbr_id = #{mbrId} and type = 6")
     BigDecimal sumAmountByMbrId(@Param("mbrId") Integer mbrId);
 
-    @Select("select ifnull(sum(amount),0) from mbr_assets_flw where mbr_id = #{mbrId} and type in (5,7) and create_at >= #{startTime}")
+    @Select("select ifnull(sum(amount),0) from mbr_assets_flw where mbr_id = #{mbrId} and type = 6 and create_at >= #{startTime}")
     BigDecimal sumAmountByMbrIdAndStartTime(@Param("mbrId") Integer mbrId, @Param("startTime") LocalDateTime startTime);
 
     @Select("select * from mbr_assets_flw where mbr_id = #{mbrId}")
