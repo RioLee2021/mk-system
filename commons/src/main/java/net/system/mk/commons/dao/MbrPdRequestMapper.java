@@ -23,7 +23,7 @@ public interface MbrPdRequestMapper extends BaseMapper<MbrPdRequest> {
     @Select("select count(1) from mbr_pd_request where pd_no is null")
     Integer getRunningCnt();
 
-    @Select("select * from mbr_pd_request where mbr_id = #{mbrId} and pd_no is null")
+    @Select("select count(1) from mbr_pd_request where mbr_id = #{mbrId} and pd_no is null")
     int cntRequestingByMbrId(@Param("mbrId") Integer mbrId);
 
 
