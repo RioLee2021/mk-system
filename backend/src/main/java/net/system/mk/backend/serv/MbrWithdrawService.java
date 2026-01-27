@@ -46,6 +46,7 @@ public class MbrWithdrawService {
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "记录已处理");
         }
         data.setStatus(RecordStatus.paid);
+        mbrWithdrawRecordMapper.updateById(data);
         return ResultBody.success();
     }
 
@@ -59,6 +60,7 @@ public class MbrWithdrawService {
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "记录已处理");
         }
         data.setStatus(RecordStatus.failed);
+        mbrWithdrawRecordMapper.updateById(data);
         mbrAssetHelper.submitAssetChange(data.getMbrId(), data.getAmount(), AssetsFlwType.withdraw_rollback_add, "提现拒绝", data.getRecNo());
         return ResultBody.success();
     }
