@@ -2,10 +2,7 @@ package net.system.mk.backend.ctrl.biz;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.system.mk.backend.ctrl.biz.vo.BatchChangeMbrStatusUpdRequest;
-import net.system.mk.backend.ctrl.biz.vo.MbrCpMarkUpdRequest;
-import net.system.mk.backend.ctrl.biz.vo.MbrInfoPagerRequest;
-import net.system.mk.backend.ctrl.biz.vo.MbrInfoSaveRequest;
+import net.system.mk.backend.ctrl.biz.vo.*;
 import net.system.mk.backend.serv.MbrInfoService;
 import net.system.mk.commons.anno.AuthCheck;
 import net.system.mk.commons.anno.MerchantInject;
@@ -77,6 +74,14 @@ public class MbrInfoController {
     @MerchantInject
     public ResultBody<Void> batChangeStatus(@Valid @RequestBody BatchChangeMbrStatusUpdRequest request) {
         return service.batChangeStatus(request);
+    }
+
+    @PostMapping("/updVipLevel.do")
+    @ApiOperation(value = "修改会员等级")
+    @AuthCheck
+    @MerchantOnly
+    public ResultBody<Void> updVipLevel(@Valid @RequestBody MbrVipLevelUpdRequest request) {
+        return service.updVipLevel(request);
     }
 
     @PostMapping("/updCpMark.do")

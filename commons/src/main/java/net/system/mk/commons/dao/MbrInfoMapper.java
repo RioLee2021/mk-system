@@ -10,6 +10,8 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
+import java.util.List;
+
 
 /**
  * @author USER
@@ -42,4 +44,7 @@ public interface MbrInfoMapper extends BaseMapper<MbrInfo> {
 
     @Select("select * from mbr_info where phone = #{uk} or account = #{uk}")
     MbrInfo getOneByUk(@Param("uk")String uk);
+
+    @Select("select invite_code from mbr_info")
+    List<String> getUsedInviteCodes();
 }

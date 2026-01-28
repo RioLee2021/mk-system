@@ -42,25 +42,6 @@ public class MyMvcConfig implements WebMvcConfigurer {
     @Resource
     private RepeatSubmitAop repeatSubmitAop;
 
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addFormatterForFieldType(String.class, new Formatter<String>() {
-
-            @Override
-            public String print(String s, Locale locale) {
-                return s;
-            }
-
-            @Override
-            public String parse(String s, Locale locale) throws ParseException {
-                if (StrUtil.isBlank(s)){
-                    return null;
-                }
-                return s;
-            }
-        });
-    }
-
     @Bean
     public CloudflareR2Client cloudflareR2Client(){
         CloudflareR2Client.S3Config config = new CloudflareR2Client.S3Config();

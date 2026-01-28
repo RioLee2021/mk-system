@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.excel.EasyExcel;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoAddRequest;
 import net.system.mk.backend.ctrl.basic.vo.ProductInfoPagerRequest;
+import net.system.mk.backend.ctrl.basic.vo.ProductInfoUpdRequest;
 import net.system.mk.backend.ctrl.system.vo.BatchIdsRequest;
 import net.system.mk.commons.dao.BrandInfoMapper;
 import net.system.mk.commons.dao.ProductInfoMapper;
@@ -99,7 +100,7 @@ public class ProductInfoService {
     }
 
 
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<Void> batUpdSpecialOffer(BatchIdsRequest request) {
         for (Integer id : request.getIds()){
             ProductInfo po = productInfoMapper.selectById(id);
@@ -113,5 +114,16 @@ public class ProductInfoService {
 
     public List<DictItem> brandOps() {
         return brandInfoMapper.brandOps();
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
+    public ResultBody<Void> update(ProductInfoUpdRequest request) {
+        ProductInfo data = productInfoMapper.selectById(request.getId());
+        if (data == null) {
+            throw new GlobalException(BUSINESS_ERROR, "数据不存在");
+        }
+        BeanUtil.copyProperties(request, data);
+        productInfoMapper.updateById(data);
+        return ResultBody.success();
     }
 }

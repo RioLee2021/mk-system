@@ -1,6 +1,7 @@
 package net.system.mk.front.serv;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import net.system.mk.commons.conf.AppConfig;
 import net.system.mk.commons.ctx.IBaseContext;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 import static net.system.mk.commons.expr.GlobalErrorCode.BUSINESS_ERROR;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
@@ -78,7 +80,7 @@ public class PubService {
             throw new GlobalException(BUSINESS_ERROR, "invite code invalid");
         }
         String ca = findCustomerAccount(p.getId());
-        String inviteCode = ShareCodeUtils.encodeToCode(System.currentTimeMillis());
+        String inviteCode = createShareCode();
         String token = "w#" + IdUtil.fastSimpleUUID();
         if (ca == null) {
             //如果找不到则分配给站长
@@ -101,6 +103,15 @@ public class PubService {
         mbrAssetsMapper.insert(ma);
         doLogin(mb);
         return ResultBody.okData(token);
+    }
+
+    private String createShareCode(){
+        List<String> used = mbrInfoMapper.getUsedInviteCodes();
+        String rs = RandomUtil.randomNumbers(8);
+        while (!used.contains(rs)){
+            rs = RandomUtil.randomNumbers(8);
+        }
+        return rs;
     }
 
     private String findCustomerAccount(int mbrId) {

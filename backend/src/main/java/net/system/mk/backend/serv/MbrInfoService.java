@@ -2,6 +2,7 @@ package net.system.mk.backend.serv;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.system.mk.backend.ctrl.biz.vo.*;
@@ -30,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
@@ -92,7 +94,7 @@ public class MbrInfoService {
         if (mbrInfoMapper.exists(new QueryWrapper<MbrInfo>().eq("account", "A" + request.getPhone()))) {
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "账号已存在");
         }
-        String inviteCode = ShareCodeUtils.encodeToCode(System.currentTimeMillis());
+        String inviteCode = createShareCode();
         MbrInfo mb = new MbrInfo();
         BeanUtil.copyProperties(request, mb);
         mb.setInviteCode(inviteCode).setAccount("A" + request.getPhone());
@@ -109,6 +111,15 @@ public class MbrInfoService {
         mba.setMbrId(mb.getId());
         mbrAssetsMapper.insert(mba);
         request.setAllMemo(OtherUtils.fmtString("添加会员:{}", request));
+    }
+
+    private String createShareCode(){
+        List<String> used = mbrInfoMapper.getUsedInviteCodes();
+        String rs = RandomUtil.randomNumbers(8);
+        while (!used.contains(rs)){
+            rs = RandomUtil.randomNumbers(8);
+        }
+        return rs;
     }
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
@@ -219,5 +230,16 @@ public class MbrInfoService {
         BaseUpdateRequest req = new BaseUpdateRequest();
         req.setId(cc.getId());
         return customerChatService.detail(req);
+    }
+
+    @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
+    public ResultBody<Void> updVipLevel(MbrVipLevelUpdRequest request) {
+        MbrInfo mb = mbrInfoMapper.selectById(request.getId());
+        if (mb==null){
+            throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "会员不存在");
+        }
+        mb.setVipLevel(request.getVipLevel());
+        mbrInfoMapper.updateById(mb);
+        return ResultBody.success();
     }
 }
