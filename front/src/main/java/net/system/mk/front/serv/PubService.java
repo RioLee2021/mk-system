@@ -80,7 +80,7 @@ public class PubService {
             throw new GlobalException(BUSINESS_ERROR, "invite code invalid");
         }
         String ca = findCustomerAccount(p.getId());
-        String inviteCode = createShareCode();
+        String inviteCode = ShareCodeUtils.encodeToCode(System.currentTimeMillis());
         String token = "w#" + IdUtil.fastSimpleUUID();
         if (ca == null) {
             //如果找不到则分配给站长
@@ -105,14 +105,6 @@ public class PubService {
         return ResultBody.okData(token);
     }
 
-    private String createShareCode(){
-        List<String> used = mbrInfoMapper.getUsedInviteCodes();
-        String rs = RandomUtil.randomNumbers(8);
-        while (!used.contains(rs)){
-            rs = RandomUtil.randomNumbers(8);
-        }
-        return rs;
-    }
 
     private String findCustomerAccount(int mbrId) {
         MbrInfo mb = mbrInfoMapper.selectById(mbrId);

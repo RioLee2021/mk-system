@@ -94,7 +94,7 @@ public class MbrInfoService {
         if (mbrInfoMapper.exists(new QueryWrapper<MbrInfo>().eq("account", "A" + request.getPhone()))) {
             throw new GlobalException(GlobalErrorCode.BUSINESS_ERROR, "账号已存在");
         }
-        String inviteCode = createShareCode();
+        String inviteCode = ShareCodeUtils.encodeToCode(System.currentTimeMillis());
         MbrInfo mb = new MbrInfo();
         BeanUtil.copyProperties(request, mb);
         mb.setInviteCode(inviteCode).setAccount("A" + request.getPhone());
@@ -113,14 +113,7 @@ public class MbrInfoService {
         request.setAllMemo(OtherUtils.fmtString("添加会员:{}", request));
     }
 
-    private String createShareCode(){
-        List<String> used = mbrInfoMapper.getUsedInviteCodes();
-        String rs = RandomUtil.randomNumbers(8);
-        while (!used.contains(rs)){
-            rs = RandomUtil.randomNumbers(8);
-        }
-        return rs;
-    }
+
 
     @Transactional(rollbackFor = Exception.class, propagation = REQUIRED)
     public ResultBody<Void> batChangeStatus(BatchChangeMbrStatusUpdRequest request) {
